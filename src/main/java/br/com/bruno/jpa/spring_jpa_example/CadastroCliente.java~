@@ -1,0 +1,55 @@
+package br.com.bruno.jpa.spring_jpa_example;
+
+import br.com.bruno.jpa.spring_jpa_example.model.Carro;
+import br.com.bruno.jpa.spring_jpa_example.model.Cliente;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CadastroCliente {
+
+    public static void main(String... string) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("JPA Example");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        Cliente cliente = entityManager.find(Cliente.class, 1L);
+
+        // Check if cliente exists
+        if (cliente == null) {
+            cliente = new Cliente();
+            cliente.setId(1L);
+            cliente.setNome("Bruno");
+
+            entityManager.getTransaction().begin();
+            entityManager.persist(cliente); // Persist the new Cliente
+            entityManager.getTransaction().commit();
+        } else {
+            // If cliente exists, merge it to ensure it's managed
+            cliente = entityManager.merge(cliente);
+        }
+
+        // Create a new list of Carro
+        List<Carro> carros = new ArrayList<>();
+
+        // Create a new Carro instance
+        Carro carro = new Carro();
+        carro.setId(1L);
+        carro.setMarca("BMW");
+        carro.setModelo("X5");
+        carro.setCliente(cliente);
+
+        carros.add(carro);
+        cliente.setCarros(carros); // Update the list of carros for cliente
+
+        // Persist the new Carro instance
+        entityManager.getTransaction().begin();
+        entityManager.persist(carro); // Persist the new Carro entity
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+        entityManagerFactory.close();
+    }
+}

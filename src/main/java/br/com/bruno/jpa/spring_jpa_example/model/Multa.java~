@@ -1,0 +1,27 @@
+package br.com.bruno.jpa.spring_jpa_example.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+@Table(name = "tb_multa")
+public class Multa {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "valor", nullable = false)
+    private Double valor;
+
+    @Column(name = "data")
+    private LocalDateTime data;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carro_id", nullable = false)
+    private Carro carro;
+}

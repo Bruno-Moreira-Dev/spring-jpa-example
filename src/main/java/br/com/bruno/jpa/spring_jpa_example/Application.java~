@@ -1,4 +1,4 @@
 package br.com.bruno.jpa.spring_jpa_example;
 
-public class BuscarTodosClientesExecute {
+public class Application {
 }
